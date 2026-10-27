@@ -1,4 +1,4 @@
-# 🏢 QLNhaTroWeb - Hệ Thống Quản Lý Nhà Trọ Hiện Đại
+#  QLNhaTroWeb - Hệ Thống Quản Lý Nhà Trọ 
 
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-blueviolet)
 ![C%23](https://img.shields.io/badge/C%23-Language-blue)
@@ -29,7 +29,7 @@
 - **Quản lý hóa đơn:** Theo dõi lịch sử hóa đơn và trạng thái thanh toán.
 - **Đổi mật khẩu:** Tự bảo mật tài khoản cá nhân.
 
-## 🛠 Công nghệ sử dụng
+##  Công nghệ sử dụng
 - **Ngôn ngữ:** C# (.NET 8)
 - **Framework:** ASP.NET Core MVC
 - **ORM:** Entity Framework Core

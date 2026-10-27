@@ -1,0 +1,62 @@
+﻿@model QLNhaTroWeb.Models.DichVu
+@{ ViewData["Title"] = "Sửa Dịch Vụ"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-5 col-lg-6">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Chỉnh Sửa Dịch Vụ</h5>
+                <p class="text-muted small mb-0">Cập nhật thông tin tên hoặc giá của dịch vụ.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Edit" id="dichVuForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+                    
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted small">Mã Dịch Vụ (Không thể sửa)</label>
+                        <!-- ĐÃ BỎ DẤU # Ở ĐÂY -->
+                        <input type="text" class="form-control bg-light" value="@Model.Id" readonly />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted small">Tên Dịch Vụ <span class="text-danger">*</span></label>
+                        <input asp-for="TenDichVu" class="form-control" required maxlength="200" />
+                        <span asp-validation-for="TenDichVu" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted small">Đơn Giá <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input asp-for="Gia" class="form-control" type="number" min="1" required />
+                            <span class="input-group-text">VNĐ</span>
+                        </div>
+                        <span asp-validation-for="Gia" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4" id="btnSubmit" style="border-radius: 8px;">
+                            <i class="bi bi-save me-1"></i> Lưu Thay Đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#dichVuForm').submit(function () {
+            if ($(this).valid()) {
+                $('#btnSubmit').prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Đang lưu...');
+            }
+        });
+    </script>
+}

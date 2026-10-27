@@ -1,0 +1,385 @@
+﻿@{
+    Layout = null; // Bỏ thanh menu đen
+    ViewData["Title"] = "Đăng nhập - QL Nhà Trọ";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Cột bên trái: Hình ảnh nền */
+        .left-panel {
+            background-image: url('/images/login-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            color: white;
+        }
+
+        /* Lớp phủ gradient để chữ dễ đọc */
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(20, 30, 48, 0.7) 0%, rgba(36, 59, 85, 0.7) 100%);
+            z-index: 1;
+        }
+
+        .left-panel-content {
+            position: relative;
+            z-index: 2;
+            max-width: 500px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-logo i {
+            color: #4ade80; /* Màu xanh lá cho icon */
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        .left-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .left-desc {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Cột bên phải: Form Đăng nhập */
+        .right-panel {
+            background-color: #fcfaf8; /* Màu kem nhạt */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Khung đăng nhập */
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e9e1;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Ô nhập liệu */
+        .input-group-text-custom {
+            background-color: #f7f7f7;
+            border: 1px solid #e2e8f0;
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            color: #a0aec0;
+        }
+
+        .form-control-custom {
+            background-color: #f7f7f7;
+            border: 1px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            color: #2d3748;
+        }
+
+        .form-control-custom:focus {
+            background-color: #fff;
+            border-color: #0d6efd;
+            box-shadow: none;
+        }
+
+        .form-control-custom:focus + .input-group-text-custom,
+        .input-group:focus-within .input-group-text-custom {
+            background-color: #fff;
+            border-color: #0d6efd;
+            color: #0d6efd;
+        }
+
+        /* Nút hiển thị mật khẩu */
+        .btn-toggle-pass {
+            border: 1px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            background-color: #f7f7f7;
+            color: #a0aec0;
+            padding: 0 1rem;
+        }
+        
+        .btn-toggle-pass:hover {
+            color: #2d3748;
+        }
+
+        .form-label-custom {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Nút Đăng nhập */
+        .btn-login {
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+        }
+
+        /* Nút QR */
+        .btn-qr {
+            background-color: transparent;
+            color: #198754;
+            border: 2px solid #198754;
+            border-radius: 12px;
+            padding: 0.7rem;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-qr:hover {
+            background-color: #198754;
+            color: white;
+        }
+
+        .link-register {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .link-register:hover {
+            color: #0b5ed7;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- KHU VỰC BÊN TRÁI: ẢNH NỀN & GIỚI THIỆU -->
+            <div class="col-lg-6 d-none d-lg-flex left-panel">
+                <div class="left-panel-content">
+                    <
+                    
+                </div>
+            </div>
+
+            <!-- KHU VỰC BÊN PHẢI: KHUNG ĐĂNG NHẬP -->
+            <div class="col-lg-6 right-panel">
+                <div class="login-card">
+                    <h2 class="login-title">Chào mừng trở lại</h2>
+                    <p class="login-subtitle">Đăng nhập vào Hệ thống Quản lý Nhà trọ</p>
+
+                    <!-- Hiển thị lỗi nếu có -->
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger rounded-3 small py-2">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @ViewBag.Error
+                        </div>
+                    }
+
+                    <form method="post" asp-action="Login">
+                        @Html.AntiForgeryToken()
+                        
+                        <!-- Tên đăng nhập -->
+                        <div class="mb-3">
+                            <label class="form-label-custom">Tên đăng nhập</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-custom"><i class="bi bi-person"></i></span>
+                                <input type="text" name="id" class="form-control form-control-custom" placeholder="Nhập tên đăng nhập" required autofocus />
+                            </div>
+                        </div>
+
+                        <!-- Mật khẩu -->
+                        <div class="mb-3">
+                            <label class="form-label-custom">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-custom"><i class="bi bi-lock"></i></span>
+                                <input type="password" name="password" id="passwordInput" class="form-control form-control-custom" placeholder="Nhập mật khẩu" required />
+                                <button class="btn btn-toggle-pass" type="button" id="togglePassword">
+                                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ghi nhớ đăng nhập -->
+                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input type="checkbox" name="rememberMe" value="true" class="form-check-input" id="chkRemember" />
+                                <label class="form-check-label text-muted small" for="chkRemember">Ghi nhớ đăng nhập</label>
+                            </div>
+                        </div>
+
+                        <!-- Nút Đăng nhập -->
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-login">Đăng nhập</button>
+                            
+                            <!-- Nút Đăng nhập QR -->
+                            <button type="button" class="btn btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
+                                <i class="bi bi-qr-code-scan me-1"></i> Đăng nhập bằng mã QR
+                            </button>
+                        </div>
+
+                        <!-- Link đăng ký -->
+                        <div class="text-center mt-4">
+                            <span class="text-muted small">Khách hàng mới? </span>
+                            <a href="/DangKy/Index" class="link-register small">Đăng ký thuê phòng tại đây</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Quét Mã QR (Giữ nguyên) -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-qr-code-scan me-2"></i>Quét mã QR để đăng nhập</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="stopScanner()"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div id="reader" style="width: 100%; border-radius: 12px; overflow: hidden;"></div>
+                    <p class="text-muted mt-3 mb-0" id="qrStatus">Đang khởi động camera...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // 1. Chức năng Ẩn/Hiện mật khẩu
+            $('#togglePassword').click(function () {
+                var passwordField = $('#passwordInput');
+                var type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+                passwordField.attr('type', type);
+                
+                // Đổi icon
+                $('#toggleIcon').toggleClass('bi-eye bi-eye-slash');
+            });
+
+            // 2. Logic Quét Mã QR (Giữ nguyên)
+            let html5QrCode;
+
+            $('#qrModal').on('shown.bs.modal', function () {
+                startScanner();
+            });
+
+            $('#qrModal').on('hidden.bs.modal', function () {
+                stopScanner();
+            });
+
+            function startScanner() {
+                html5QrCode = new Html5Qrcode("reader");
+                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    (decodedText, decodedResult) => {
+                        document.getElementById('qrStatus').innerText = "Đã quét được mã! Đang kiểm tra...";
+                        stopScanner();
+                        sendQRToServer(decodedText);
+                    },
+                    (errorMessage) => { /* Bỏ qua lỗi liên tục */ }
+                ).catch((err) => {
+                    document.getElementById('qrStatus').innerText = "Không thể mở Camera. Hãy cấp quyền!";
+                });
+            }
+
+            function stopScanner() {
+                if (html5QrCode) {
+                    html5QrCode.stop().then(() => { html5QrCode.clear(); }).catch(() => {});
+                }
+            }
+
+            function sendQRToServer(qrText) {
+                fetch('/Account/ProcessQRLogin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'qrData=' + encodeURIComponent(qrText)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Đăng nhập thành công!");
+                        window.location.href = '/Home/Index';
+                    } else {
+                        alert("Thông báo: " + data.message);
+                        document.getElementById('qrStatus').innerText = data.message;
+                        startScanner();
+                    }
+                })
+                .catch(error => alert("Lỗi kết nối tới Server!"));
+            }
+        });
+    </script>
+</body>
+</html>

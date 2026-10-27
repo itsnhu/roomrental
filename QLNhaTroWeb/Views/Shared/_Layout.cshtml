@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QL Nhà Trọ</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        /* ================= KHAI BÁO BIẾN MÀU SẮC ================= */
+        :root {
+            --sb-bg: #172554;           
+            --sb-text: #CBD5E1;         
+            --sb-hover-bg: #1e3a8a;     
+            --sb-active-bg: #233B78;    
+            --sb-accent: #3B82F6;       
+            --sb-active-text: #FFFFFF;  
+            --bg-color: #f5f7fb;        
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background-color: var(--sb-bg);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand i {
+            color: var(--sb-accent);
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        .sidebar-menu::-webkit-scrollbar { width: 6px; }
+        .sidebar-menu::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-menu::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        .sidebar-menu::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Định dạng chung cho Link và Nút Toggle */
+        .sidebar-menu a, .menu-toggle {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            padding: 0 1rem; /* Giảm padding từ 1.5rem xuống 1rem để có thêm không gian cho chữ */
+            color: var(--sb-text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-left: 4px solid transparent;
+            transition: background-color 0.15s ease, color 0.15s ease;
+            cursor: pointer;
+        }
+
+        /* Định dạng cho Nút Toggle (có mũi tên) */
+        .menu-toggle {
+            justify-content: space-between;
+        }
+
+        .menu-toggle:hover, .sidebar-menu a:hover {
+            background-color: var(--sb-hover-bg);
+            color: #ffffff;
+        }
+
+        /* Vùng chứa Icon + Chữ (Ép chữ trên 1 dòng) */
+        .menu-toggle > div, .sidebar-menu a {
+            white-space: nowrap; /* Không cho xuống dòng */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Hiện dấu ... nếu quá dài */
+        }
+
+        /* Icon */
+        .sidebar-menu a i, .menu-toggle i.icon-main {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+            margin-right: 10px; /* Giảm nhẹ margin */
+            transition: color 0.15s ease;
+            flex-shrink: 0; /* Không cho icon bị bóp méo */
+        }
+
+        /* Mũi tên xổ xuống */
+        .menu-toggle .arrow {
+            font-size: 0.8rem;
+            margin-right: 0;
+            transition: transform 0.3s ease;
+            flex-shrink: 0; /* Không cho mũi tên bị ép */
+        }
+
+        /* Trạng thái Đang chọn (Active) */
+        .sidebar-menu a.active {
+            background-color: var(--sb-active-bg);
+            color: var(--sb-active-text);
+            border-left-color: var(--sb-accent);
+            font-weight: 600;
+        }
+
+        .sidebar-menu a.active i {
+            color: var(--sb-accent);
+        }
+
+        /* ================= SUBMENU ================= */
+        .submenu {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            border-left: 4px solid transparent;
+        }
+
+        .submenu a {
+            height: 40px;
+            padding-left: 2.8rem; /* Thụt lề vừa phải */
+            font-size: 0.9rem;
+            border-left: none;
+        }
+
+        .submenu a.active {
+            background-color: transparent;
+            color: var(--sb-accent);
+            font-weight: 600;
+        }
+
+        /* Khi menu mở, xoay mũi tên */
+        .menu-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .menu-toggle.open {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        .main-wrapper {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .topbar {
+            background-color: #ffffff;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .page-title { font-size: 1.25rem; font-weight: 600; color: #1f2937; margin: 0; }
+        .user-info { display: flex; align-items: center; gap: 1rem; }
+        .user-profile { display: flex; align-items: center; gap: 10px; font-weight: 500; color: #1f2937; }
+        .user-avatar { width: 40px; height: 40px; background-color: #eff6ff; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; }
+
+        .btn-logout {
+            color: #ef4444; background: transparent; border: 1px solid #fecaca; padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; text-decoration: none;
+        }
+        .btn-logout:hover { background-color: #fef2f2; color: #dc2626; }
+
+        .content-area { padding: 2rem; flex-grow: 1; }
+
+        /* ================= RESPONSIVE ================= */
+        @@media (max-width: 991.98px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="/" class="sidebar-brand">
+            <i class="bi bi-buildings"></i> <span>QL NHÀ TRỌ</span>
+        </a>
+
+        <div class="sidebar-menu">
+            @{
+                string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            }
+
+            @if (Context.Session.GetString("Role") == "Admin")
+            {
+                <!-- Trang chủ -->
+                <a href="/Home/Index" class="@(currentController == "Home" ? "active" : "")">
+                    <i class="bi bi-grid-1x2-fill"></i> <span>Trang chủ Admin</span>
+                </a>
+
+                <!-- NHÓM 1: QUẢN LÝ PHÒNG -->
+                <div class="menu-group">
+                    <div class="menu-toggle @(new[] {"Phong", "DichVu"}.Contains(currentController) ? "open" : "")">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-door-closed-fill icon-main"></i> <span>Quản lý Phòng</span>
+                        </div>
+                        <i class="bi bi-chevron-down arrow"></i>
+                    </div>
+                    <div class="submenu" style="@(new[] {"Phong", "DichVu"}.Contains(currentController) ? "display: block;" : "")">
+                        <a href="/Phong/Index" class="@(currentController == "Phong" ? "active" : "")">Danh sách Phòng</a>
+                        <a href="/DichVu/Index" class="@(currentController == "DichVu" ? "active" : "")">Quản lý Dịch Vụ</a>
+                    </div>
+                </div>
+
+                <!-- NHÓM 2: KHÁCH HÀNG & HỢP ĐỒNG (Đã rút gọn tên) -->
+                <div class="menu-group">
+                    <div class="menu-toggle @(new[] {"Khach", "HopDong", "TraPhong"}.Contains(currentController) ? "open" : "")">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-people-fill icon-main"></i> <span>Khách & Hợp Đồng</span>
+                        </div>
+                        <i class="bi bi-chevron-down arrow"></i>
+                    </div>
+                    <div class="submenu" style="@(new[] {"Khach", "HopDong", "TraPhong"}.Contains(currentController) ? "display: block;" : "")">
+                        <a href="/Khach/Index" class="@(currentController == "Khach" ? "active" : "")">Quản lý Khách Thuê</a>
+                        <a href="/HopDong/Index" class="@(currentController == "HopDong" ? "active" : "")">Lập Hợp Đồng Thuê</a>
+                        <a href="/TraPhong/Index" class="@(currentController == "TraPhong" ? "active" : "")">Xử lý Trả Phòng</a>
+                    </div>
+                </div>
+
+                <!-- NHÓM 3: TÀI CHÍNH -->
+                <div class="menu-group">
+                    <div class="menu-toggle @(new[] {"PhieuThu", "ThongKe"}.Contains(currentController) ? "open" : "")">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-receipt-cutoff icon-main"></i> <span>Tài chính & Thống kê</span>
+                        </div>
+                        <i class="bi bi-chevron-down arrow"></i>
+                    </div>
+                    <div class="submenu" style="@(new[] {"PhieuThu", "ThongKe"}.Contains(currentController) ? "display: block;" : "")">
+                        <a href="/PhieuThu/Index" class="@(currentController == "PhieuThu" ? "active" : "")">Hóa Đơn / Thanh Toán</a>
+                        <a href="/ThongKe/Index" class="@(currentController == "ThongKe" ? "active" : "")">Thống Kê Doanh Thu</a>
+                    </div>
+                </div>
+
+                <!-- NHÓM 4: YÊU CẦU & DUYỆT -->
+                <div class="menu-group">
+                    <div class="menu-toggle @(new[] {"DuyetDangKy", "YeuCauThue"}.Contains(currentController) ? "open" : "")">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-clipboard-check-fill icon-main"></i> <span>Duyệt Yêu Cầu</span>
+                        </div>
+                        <i class="bi bi-chevron-down arrow"></i>
+                    </div>
+                    <div class="submenu" style="@(new[] {"DuyetDangKy", "YeuCauThue"}.Contains(currentController) ? "display: block;" : "")">
+                        <a href="/DuyetDangKy/Index" class="@(currentController == "DuyetDangKy" ? "active" : "")">Duyệt Đơn Đăng Ký</a>
+                        <a href="/YeuCauThue/Index" class="@(currentController == "YeuCauThue" ? "active" : "")">Duyệt Đặt Phòng</a>
+                    </div>
+                </div>
+            }
+            else if (Context.Session.GetString("Role") == "User")
+            {
+                <!-- MENU DÀNH CHO KHÁCH THUÊ -->
+                <a href="/UserPortal/Index" class="@(currentController == "UserPortal" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                    <i class="bi bi-house-door-fill"></i> <span>Trang chủ Khách</span>
+                </a>
+                <a href="/UserPortal/LichSuDangKy" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "LichSuDangKy" ? "active" : "")">
+                    <i class="bi bi-clock-history"></i> <span>Lịch sử đăng ký</span>
+                </a>
+                <a href="/UserPortal/PhongCuaToi" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "PhongCuaToi" ? "active" : "")">
+                    <i class="bi bi-door-closed"></i> <span>Phòng của tôi</span>
+                </a>
+                <a href="/UserPortal/HoaDon" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "HoaDon" ? "active" : "")">
+                    <i class="bi bi-receipt"></i> <span>Hóa đơn của tôi</span>
+                </a>
+                <a href="/UserPortal/HoSo" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "HoSo" ? "active" : "")">
+                    <i class="bi bi-person-lines-fill"></i> <span>Hồ sơ cá nhân</span>
+                </a>
+                <a href="/UserPortal/DoiMatKhau" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "DoiMatKhau" ? "active" : "")">
+                    <i class="bi bi-shield-lock-fill"></i> <span>Đổi Mật Khẩu</span>
+                </a>
+            }
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light d-lg-none me-3 shadow-none" type="button" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <h1 class="page-title d-none d-md-block">@ViewData["Title"]</h1>
+            </div>
+            
+            <div class="user-info">
+                @if (Context.Session.GetString("UserID") != null)
+                {
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            @Context.Session.GetString("UserID")?.Substring(0, 1).ToUpper()
+                        </div>
+                        <div class="d-none d-md-block lh-sm">
+                            <div class="small text-muted">@(Context.Session.GetString("Role") == "Admin" ? "Quản trị viên" : "Khách thuê")</div>
+                            <div class="fw-bold">@Context.Session.GetString("UserID")</div>
+                        </div>
+                    </div>
+                    <a href="/Account/Logout" class="btn btn-logout ms-3">
+                        <i class="bi bi-box-arrow-right me-1"></i> <span class="d-none d-sm-inline">Đăng xuất</span>
+                    </a>
+                }
+            </div>
+        </header>
+
+        <main class="content-area">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('.menu-toggle').click(function (e) {
+                e.preventDefault(); 
+                var $submenu = $(this).next('.submenu');
+                $submenu.slideToggle(250);
+                $(this).toggleClass('open');
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

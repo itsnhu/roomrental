@@ -1,0 +1,99 @@
+﻿@model QLNhaTroWeb.Models.ThongTinKhach
+@{ ViewData["Title"] = "Sửa Khách Thuê"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Cập nhật thông tin Khách Thuê</h5>
+                <p class="text-muted small mb-0">Chỉnh sửa thông tin cá nhân hoặc thay đổi phòng ở.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Edit" id="khachForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+                    <input type="hidden" asp-for="MaKhachTro" />
+                    
+                    <!-- Hàng 1 -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Mã Khách Hàng (Không thể sửa)</label>
+                            <input type="text" class="form-control bg-light" value="@Model.MaKhachTro" readonly />
+                        </div>
+                        <!-- Thêm 1 cột trống để cân bằng nếu cần, hoặc đưa CMND lên đây -->
+                    </div>
+
+                    <!-- Hàng 2: Họ và Tên -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Họ <span class="text-danger">*</span></label>
+                            <input asp-for="Ho" class="form-control text-uppercase" required maxlength="255" style="text-transform: uppercase;" />
+                            <span asp-validation-for="Ho" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Tên <span class="text-danger">*</span></label>
+                            <input asp-for="Ten" class="form-control text-uppercase" required maxlength="255" style="text-transform: uppercase;" />
+                            <span asp-validation-for="Ten" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 3: Giới tính, CMND -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Giới tính <span class="text-danger">*</span></label>
+                            <select asp-for="GioiTinh" class="form-select" required>
+                                <option value="">-- Chọn giới tính --</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                            <span asp-validation-for="GioiTinh" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Số CMND/CCCD <span class="text-danger">*</span></label>
+                            <input asp-for="CMND" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="12" required />
+                            <span asp-validation-for="CMND" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 4: Quê quán và Mã phòng -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Quê quán <span class="text-danger">*</span></label>
+                            <input asp-for="QueQuan" class="form-control" required maxlength="255" />
+                            <span asp-validation-for="QueQuan" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Mã Phòng</label>
+                            <!-- Combobox tự động chọn đúng phòng hiện tại -->
+                            <select asp-for="MaPhong" class="form-select" asp-items="ViewBag.MaPhong">
+                                <option value="">-- Trả phòng (Còn trống) --</option>
+                            </select>
+                            <span asp-validation-for="MaPhong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Nút bấm -->
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4" id="btnSubmit" style="border-radius: 8px;">
+                            <i class="bi bi-save me-1"></i> Lưu Thay Đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#khachForm').submit(function () {
+            if ($(this).valid()) {
+                $('#btnSubmit').prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Đang lưu...');
+            }
+        });
+    </script>
+}

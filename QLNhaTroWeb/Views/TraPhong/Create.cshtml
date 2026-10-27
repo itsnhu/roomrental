@@ -1,0 +1,39 @@
+﻿@{ ViewData["Title"] = "Lập Phiếu Trả Phòng"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-6 col-lg-8">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Xác Nhận Trả Phòng</h5>
+                <p class="text-muted small mb-0">Chọn phòng khách muốn trả để giải phóng phòng.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger border-0 shadow-sm mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                    </div>
+                }
+
+                <form asp-action="Create">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted small">Chọn Phòng Cần Trả <span class="text-danger">*</span></label>
+                        <select name="maPhong" class="form-select form-select-lg" asp-items="ViewBag.MaPhong" required>
+                            <option value="">-- Chọn phòng đang thuê --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="alert alert-warning border-0 small mb-4">
+                        <i class="bi bi-info-circle-fill me-1"></i> <strong>Lưu ý:</strong> Khi xác nhận, hệ thống sẽ tự động chuyển trạng thái phòng sang "Còn trống" và gỡ khách hàng khỏi phòng.
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">Quay lại</a>
+                        <button type="submit" class="btn btn-danger px-4" style="border-radius: 8px;" onclick="return confirm('Xác nhận trả phòng?');">Xác Nhận Trả Phòng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

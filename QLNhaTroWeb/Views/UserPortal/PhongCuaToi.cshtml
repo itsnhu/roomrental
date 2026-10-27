@@ -1,0 +1,86 @@
+﻿@model QLNhaTroWeb.Models.ThongTinKhach
+@{ ViewData["Title"] = "Phòng của tôi"; }
+
+@if (ViewBag.NoRoom != null)
+{
+    <div class="alert alert-warning text-center mt-5">
+        <h4>Bạn hiện chưa được xếp phòng!</h4>
+        <p>Vui lòng gửi yêu cầu đăng ký thuê phòng để Admin duyệt.</p>
+        <a href="/UserPortal/DangKyThue" class="btn btn-primary mt-2">Gửi yêu cầu đăng ký phòng</a>
+    </div>
+}
+else
+{
+    <h2 class="mb-4">Thông Tin Phòng Đang Thuê</h2>
+    <div class="row">
+        <!-- Thẻ thông tin phòng -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-door-closed"></i> Chi tiết Phòng</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="text-success fw-bold mb-3">@Model.Phong?.TenPhong</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Mã phòng:</strong> <span class="badge bg-secondary">@Model.Phong?.MaPhong</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Khu vực:</strong> <span>@Model.Phong?.KhuVuc?.TenKhuVuc</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Dãy:</strong> <span>@Model.Phong?.Day</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Loại phòng:</strong> <span>@Model.Phong?.LoaiPhong?.TenLoaiPhong (@Model.Phong?.LoaiPhong?.DienTichPhong m²)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Giá thuê:</strong> <span class="text-danger fw-bold fs-5">@Model.Phong?.LoaiPhong?.DonGia?.ToString("N0") VNĐ/tháng</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Thẻ thông tin hợp đồng -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Thông tin Hợp đồng</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.HopDong != null)
+                    {
+                        var hd = ViewBag.HopDong as QLNhaTroWeb.Models.ThongTinThuePhong;
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Mã hợp đồng:</strong> <span class="text-primary fw-bold">@hd.MaHD</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="text-danger fw-bold fs-5">@Model.Phong?.LoaiPhong?.DonGia?.ToString("N0") VNĐ/tháng</p>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Tiền đặt cọc:</strong> <span class="text-danger fw-bold">@(hd.TienDatCoc?.ToString("N0") ?? "0") VNĐ</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Trạng thái:</strong> <span class="badge bg-success">Đang có hiệu lực</span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Ghi chú:</strong> <br />
+                                <span class="text-muted">@(string.IsNullOrEmpty(hd.GhiChu) ? "Không có ghi chú." : hd.GhiChu)</span>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-exclamation-circle text-warning fs-1"></i>
+                            <p class="text-muted mt-2">Chưa có thông tin hợp đồng chi tiết trong hệ thống.</p>
+                            <small>Vui lòng liên hệ Admin để cập nhật hợp đồng.</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

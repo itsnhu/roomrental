@@ -1,0 +1,34 @@
+﻿@model QLNhaTroWeb.Models.ThongTinKhach
+@{ ViewData["Title"] = "Hồ sơ cá nhân"; }
+
+<h2>Hồ Sơ Cá Nhân</h2>
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+@if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="HoSo" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="maKhachTro" value="@Model.MaKhachTro" />
+            
+            <div class="mb-3">
+                <label class="form-label">Mã Khách Hàng</label>
+                <input type="text" class="form-control" value="@Model.MaKhachTro" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Họ và Tên</label>
+                <input type="text" class="form-control" value="@Model.Ho @Model.Ten" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">CMND/CCCD</label>
+                <input type="text" class="form-control" value="@Model.CMND" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại / Ghi chú</label>
+                <input type="text" name="ghiChu" class="form-control" value="@Model.GhiChu" maxlength="255" />
+            </div>
+
+            <button type="submit" class="btn btn-success">Lưu Thay Đổi</button>
+        </form>
+    </div>
+</div>

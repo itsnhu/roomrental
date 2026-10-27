@@ -1,0 +1,131 @@
+﻿@model QLNhaTroWeb.Models.PhieuThu
+@{ ViewData["Title"] = "Lập Hóa Đơn"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-9 col-lg-11">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Lập Hóa Đơn Mới</h5>
+                <p class="text-muted small mb-0">Hệ thống sẽ tự động tính tiền điện, nước và cấp Mã Phiếu Thu.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Create" id="phieuThuForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold text-muted small">Chọn Phòng <span class="text-danger">*</span></label>
+                            <select asp-for="MaPhong" class="form-select form-select-lg" asp-items="ViewBag.MaPhong" required>
+                                <option value="">-- Chọn phòng cần lập hóa đơn --</option>
+                            </select>
+                            <span asp-validation-for="MaPhong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-3 rounded mb-4 border border-light">
+                        <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-calculator me-1"></i> Chi tiết thanh toán</h6>
+                        <div class="row">
+                            <!-- Tiền Nhà -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Tiền Nhà (VNĐ) <span class="text-danger">*</span></label>
+                                <input asp-for="TienNha" class="form-control" type="number" min="0" placeholder="VD: 1500000" required />
+                                <span asp-validation-for="TienNha" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Tiền Điện -->
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold text-muted small">Số ký Điện tiêu thụ</label>
+                                <input asp-for="SkDien" id="SkDien" class="form-control" type="number" min="0" value="0" />
+                                <span asp-validation-for="SkDien" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold text-muted small">Đơn giá Điện</label>
+                                <input class="form-control bg-white" type="text" value="@ViewBag.DonGiaDien.ToString("N0") VNĐ/ký" readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-muted small">Thành tiền Điện (VNĐ)</label>
+                                <!-- Ô này tự động cập nhật, không cho sửa -->
+                                <input asp-for="TienDien" id="TienDien" class="form-control bg-light fw-bold text-danger" type="number" readonly />
+                                <span asp-validation-for="TienDien" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <hr class="my-3" />
+
+                        <div class="row">
+                            <!-- Tiền Nước -->
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold text-muted small">Số khối Nước tiêu thụ</label>
+                                <input asp-for="SkNuoc" id="SkNuoc" class="form-control" type="number" min="0" value="0" />
+                                <span asp-validation-for="SkNuoc" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold text-muted small">Đơn giá Nước</label>
+                                <input class="form-control bg-white" type="text" value="@ViewBag.DonGiaNuoc.ToString("N0") VNĐ/khối" readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-muted small">Thành tiền Nước (VNĐ)</label>
+                                <input asp-for="TienNuoc" id="TienNuoc" class="form-control bg-light fw-bold text-danger" type="number" readonly />
+                                <span asp-validation-for="TienNuoc" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút bấm -->
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4" id="btnSubmit" style="border-radius: 8px;">
+                            <i class="bi bi-save me-1"></i> Lưu Hóa Đơn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function () {
+            // Lấy đơn giá từ Server gán vào biến JS
+            var donGiaDien = @ViewBag.DonGiaDien;
+            var donGiaNuoc = @ViewBag.DonGiaNuoc;
+
+            // Hàm tính tiền tự động
+            function tinhTien() {
+                var soKyDien = parseFloat($('#SkDien').val()) || 0;
+                var soKhoiNuoc = parseFloat($('#SkNuoc').val()) || 0;
+
+                if (soKyDien < 0) soKyDien = 0;
+                if (soKhoiNuoc < 0) soKhoiNuoc = 0;
+
+                var tienDien = soKyDien * donGiaDien;
+                var tienNuoc = soKhoiNuoc * donGiaNuoc;
+
+                // Cập nhật vào ô input Readonly
+                $('#TienDien').val(tienDien);
+                $('#TienNuoc').val(tienNuoc);
+            }
+
+            // Lắng nghe sự kiện thay đổi số ký/khối để tính lại
+            $('#SkDien, #SkNuoc').on('input', function() {
+                tinhTien();
+            });
+
+            // Chạy tính tiền lần đầu khi mở trang
+            tinhTien();
+
+            // Chống click đúp
+            $('#phieuThuForm').submit(function () {
+                if ($(this).valid()) {
+                    $('#btnSubmit').prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Đang lưu...');
+                }
+            });
+        });
+    </script>
+}

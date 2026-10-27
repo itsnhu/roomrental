@@ -1,0 +1,128 @@
+﻿@model QLNhaTroWeb.Models.PhieuThu
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>In Hóa Đơn - @Model.MaPT</title>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; margin: 0; padding: 40px; color: #000; }
+        .invoice-box { max-width: 800px; margin: auto; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h2 { margin: 0; font-size: 28px; text-transform: uppercase; }
+        .header p { margin: 5px 0; font-size: 16px; }
+        
+        .title { text-align: center; font-size: 24px; font-weight: bold; margin: 30px 0; }
+        
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
+        
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; margin-bottom: 30px; font-size: 16px; }
+        .table th, .table td { border: 1px solid #000; padding: 10px; text-align: center; }
+        .table th { background-color: #f2f2f2; font-weight: bold; }
+        .table td.text-left { text-align: left; }
+        
+        .total { text-align: right; font-size: 18px; font-weight: bold; margin-bottom: 40px; }
+        .total span { color: red; font-size: 22px; }
+        
+        .footer { display: flex; justify-content: space-between; text-align: center; margin-top: 50px; font-size: 16px; }
+        .footer div { width: 45%; }
+        
+        /* Nút điều khiển (Sẽ bị ẩn khi in) */
+        .controls { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px dashed #ccc; }
+        .btn { padding: 10px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; color: white; margin: 0 10px; }
+        .btn-print { background-color: #0d6efd; }
+        .btn-close { background-color: #6c757d; }
+        
+        /* CSS đặc biệt cho máy in */
+        @@media print {
+            .controls { display: none; }
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Thanh điều khiển (Không in ra giấy) -->
+    <div class="controls">
+        <button class="btn btn-print" onclick="window.print()">🖨️ In Hóa Đơn Này</button>
+        <button class="btn btn-close" onclick="window.close()">Đóng Tab</button>
+    </div>
+
+    <div class="invoice-box">
+        <div class="header">
+            <h2>HỆ THỐNG QUẢN LÝ NHÀ TRỌ</h2>
+            <p>Địa chỉ: 123 Đường ABC, Quận XYZ, TP. HCM</p>
+            <p>Điện thoại: 0123 456 789</p>
+        </div>
+
+        <div class="title">HÓA ĐƠN TIỀN PHÒNG</div>
+
+        <div class="info-row">
+            <div><strong>Mã hóa đơn:</strong> #@Model.MaPT</div>
+            <div><strong>Ngày lập:</strong> @Model.NgayLap.ToString("dd/MM/yyyy")</div>
+        </div>
+        <div class="info-row">
+            <div><strong>Phòng:</strong> @Model.Phong?.TenPhong (@Model.MaPhong)</div>
+            <div><strong>Trạng thái:</strong> @Model.TrangThai</div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="10%">STT</th>
+                    <th width="40%">Nội dung thanh toán</th>
+                    <th width="20%">Chỉ số / Số lượng</th>
+                    <th width="30%">Thành tiền (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td class="text-left">Tiền nhà</td>
+                    <td>-</td>
+                    <td>@Model.TienNha?.ToString("N0")</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td class="text-left">Tiền điện</td>
+                    <td>@Model.SkDien ký</td>
+                    <td>@Model.TienDien?.ToString("N0")</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td class="text-left">Tiền nước</td>
+                    <td>@Model.SkNuoc khối</td>
+                    <td>@Model.TienNuoc?.ToString("N0")</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total">
+            TỔNG CỘNG: <span>@Model.TongTien?.ToString("N0") VNĐ</span>
+        </div>
+
+        @if(Model.NgayThu.HasValue)
+        {
+            <div class="info-row" style="justify-content: flex-end; font-style: italic;">
+                Ngày thanh toán: @Model.NgayThu.Value.ToString("dd/MM/yyyy HH:mm")
+            </div>
+        }
+
+        <div class="footer">
+            <div>
+                <p><strong>Người nộp tiền</strong></p>
+                <p style="margin-top: 80px;">(Ký và ghi rõ họ tên)</p>
+            </div>
+            <div>
+                <p><strong>Người thu tiền</strong></p>
+                <p style="margin-top: 80px;">(Ký và ghi rõ họ tên)</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

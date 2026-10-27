@@ -1,0 +1,29 @@
+﻿@{ ViewData["Title"] = "Gửi yêu cầu thuê phòng"; }
+
+<h2>Gửi Yêu Cầu Thuê Phòng</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+        
+        <form asp-action="DangKyThue" method="post">
+            <div class="mb-3">
+                <label class="form-label">Chọn Phòng Trống</label>
+                <select name="maPhong" class="form-select" asp-items="ViewBag.MaPhong" required>
+                    <option value="">-- Chọn phòng muốn thuê --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ngày dự kiến dọn vào</label>
+                <input type="date" name="ngayDuKienThue" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ghi chú thêm (Số người ở, yêu cầu...)</label>
+                <textarea name="ghiChu" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Gửi Yêu Cầu</button>
+            <a href="/UserPortal/Index" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>

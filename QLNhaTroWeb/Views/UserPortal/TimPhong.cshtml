@@ -1,0 +1,68 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.Phong>
+@{ ViewData["Title"] = "Tìm phòng"; }
+
+<h2>Tìm Phòng Trống</h2>
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <form method="get" asp-action="TimPhong" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Khu vực</label>
+                <select name="khuVuc" class="form-select" asp-items="ViewBag.KhuVucs">
+                    <option value="">-- Tất cả --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Dãy</label>
+                <select name="day" class="form-select" asp-items="ViewBag.Days">
+                    <option value="">-- Tất cả --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Loại phòng</label>
+                <select name="loaiPhong" class="form-select" asp-items="ViewBag.LoaiPhongs">
+                    <option value="">-- Tất cả --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Giá từ</label>
+                <input type="number" name="giaMin" class="form-control" placeholder="VNĐ" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Đến</label>
+                <input type="number" name="giaMax" class="form-control" placeholder="VNĐ" />
+            </div>
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a asp-action="TimPhong" class="btn btn-secondary">Đặt lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @if (!Model.Any())
+    {
+        <div class="col-12"><div class="alert alert-warning">Không tìm thấy phòng nào phù hợp với tiêu chí của bạn.</div></div>
+    }
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 border-success">
+                <div class="card-header bg-success text-white d-flex justify-content-between">
+                    <span>@item.TenPhong</span>
+                    <span class="badge bg-light text-dark">@item.MaPhong</span>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Khu vực:</strong> @item.KhuVuc?.TenKhuVuc - Dãy @item.Day</p>
+                    <p class="mb-1"><strong>Loại:</strong> @item.LoaiPhong?.TenLoaiPhong (@item.LoaiPhong?.DienTichPhong m²)</p>
+                    <p class="mb-3 text-danger fw-bold fs-5">@item.LoaiPhong?.DonGia?.ToString("N0") VNĐ/tháng</p>
+                    
+                    <div class="d-flex gap-2">
+                        <a asp-action="ChiTietPhong" asp-route-id="@item.MaPhong" class="btn btn-outline-primary w-50">Chi tiết</a>
+                        <a asp-action="DangKyThue" asp-route-maPhong="@item.MaPhong" class="btn btn-success w-50">Đăng ký thuê</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

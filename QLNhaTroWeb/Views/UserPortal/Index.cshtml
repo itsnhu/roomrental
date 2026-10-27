@@ -1,0 +1,81 @@
+﻿@model QLNhaTroWeb.Models.ThongTinKhach
+@{ ViewData["Title"] = "Trang chủ Khách Thuê"; }
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>Xin chào, @Model.Ho @Model.Ten!</h4>
+        <p class="mb-0">Chào mừng bạn đến với cổng thông tin khách thuê.</p>
+    </div>
+
+    <div class="row">
+        <!-- Cột thông tin cá nhân -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">Thông Tin Của Bạn</div>
+                <div class="card-body">
+                    <p><strong>Mã khách:</strong> @Model.MaKhachTro</p>
+                    <p><strong>CMND/CCCD:</strong> @Model.CMND</p>
+                    <p><strong>Số điện thoại:</strong> @Model.GhiChu</p> <!-- Tạm dùng GhiChu làm SĐT -->
+                    <p><strong>Phòng đang ở:</strong> 
+                        @if (Model.Phong != null) 
+                        { 
+                            <span class="badge bg-success">@Model.Phong.TenPhong</span> 
+                        }
+                        else 
+                        { 
+                            <span class="text-danger">Chưa xếp phòng</span>
+                            <div class="mt-2">
+                                <a href="/UserPortal/DangKyThue" class="btn btn-sm btn-primary w-100">Gửi yêu cầu đăng ký phòng</a>
+                                <a href="/UserPortal/LichSuDangKy" class="btn btn-sm btn-outline-secondary">Xem lịch sử đăng ký</a>
+                            </div>
+                        }
+                    </p>
+                    <a href="/UserPortal/HoSo" class="btn btn-outline-primary btn-sm w-100 mt-2">Xem Hồ Sơ</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột hóa đơn -->
+        <div class="col-md-8 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <span>Hóa Đơn Gần Đây</span>
+                    <a href="/UserPortal/HoaDon" class="btn btn-sm btn-light text-success fw-bold">Xem tất cả</a>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Mã HĐ</th>
+                                <th>Ngày Lập</th>
+                                <th>Tổng Tiền</th>
+                                <th>Trạng Thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.HoaDons != null && ViewBag.HoaDons.Count > 0)
+                            {
+                                foreach (var hd in ViewBag.HoaDons)
+                                {
+                                    <tr>
+                                        <td>@hd.MaPT</td>
+                                        <td>@hd.NgayLap.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-danger fw-bold">@hd.TongTien?.ToString("N0") VNĐ</td>
+                                        <td>
+                                            @if (hd.TrangThai == "Đã thu") { <span class="badge bg-success">Đã thu</span> }
+                                            else { <span class="badge bg-danger">Chưa thu</span> }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" class="text-center text-muted">Chưa có hóa đơn nào.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

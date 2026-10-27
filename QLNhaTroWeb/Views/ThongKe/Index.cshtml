@@ -1,0 +1,99 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.PhieuThu>
+@{ ViewData["Title"] = "Báo cáo Thống Kê"; }
+
+<!-- Form Lọc -->
+<div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
+    <div class="card-body p-4">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold text-muted small">Tháng</label>
+                <select name="thang" class="form-select">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        if (i == ViewBag.SelectedMonth) { <option value="@i" selected>Tháng @i</option> }
+                        else { <option value="@i">Tháng @i</option> }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold text-muted small">Năm</label>
+                <select name="nam" class="form-select">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year + 1; i++)
+                    {
+                        if (i == ViewBag.SelectedYear) { <option value="@i" selected>@i</option> }
+                        else { <option value="@i">@i</option> }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100" style="border-radius: 8px;"><i class="bi bi-filter"></i> Xem Thống Kê</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 3 Thẻ Thống Kê -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; border-left: 4px solid #16A34A !important;">
+            <div class="card-body">
+                <p class="text-muted fw-semibold mb-1 text-uppercase small">Doanh Thu Thực Tế</p>
+                <h3 class="fw-bold text-success mb-0">@(((long)ViewBag.DoanhThu).ToString("N0")) VNĐ</h3>
+                <small class="text-muted mt-2 d-block">Từ @ViewBag.DaThu hóa đơn đã thu</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; border-left: 4px solid #EF4444 !important;">
+            <div class="card-body">
+                <p class="text-muted fw-semibold mb-1 text-uppercase small">Tổng Tiền Nợ</p>
+                <h3 class="fw-bold text-danger mb-0">@(((long)ViewBag.TongNo).ToString("N0")) VNĐ</h3>
+                <small class="text-muted mt-2 d-block">Từ @ViewBag.ChuaThu hóa đơn chưa thu</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; border-left: 4px solid #2563EB !important;">
+            <div class="card-body">
+                <p class="text-muted fw-semibold mb-1 text-uppercase small">Tổng Số Hóa Đơn</p>
+                <h3 class="fw-bold text-primary mb-0">@ViewBag.TongHoaDon</h3>
+                <small class="text-muted mt-2 d-block">Được lập trong tháng @ViewBag.SelectedMonth</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bảng chi tiết -->
+<div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body p-4">
+        <h6 class="fw-bold mb-3 text-dark">Chi tiết hóa đơn tháng @ViewBag.SelectedMonth/@ViewBag.SelectedYear</h6>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted text-uppercase" style="font-size: 0.85rem;">
+                    <tr>
+                        <th class="py-3">Mã PT</th>
+                        <th class="py-3">Phòng</th>
+                        <th class="py-3">Ngày Lập</th>
+                        <th class="py-3">Tổng Tiền</th>
+                        <th class="py-3">Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold text-primary">#@item.MaPT</td>
+                            <td>@item.MaPhong</td>
+                            <td>@item.NgayLap.ToString("dd/MM/yyyy")</td>
+                            <td class="text-danger fw-bold">@item.TongTien?.ToString("N0")</td>
+                            <td>
+                                @if (item.TrangThai == "Đã thu") { <span class="badge bg-success bg-opacity-10 text-success">Đã thu</span> }
+                                else { <span class="badge bg-secondary">@item.TrangThai</span> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.PhieuThu>
+@{ ViewData["Title"] = "Hóa đơn của tôi"; }
+
+<h2>Danh Sách Hóa Đơn</h2>
+<form method="get" class="mb-3 d-flex w-25">
+    <select name="trangThai" class="form-select me-2" onchange="this.form.submit()">
+        <option value="">-- Tất cả trạng thái --</option>
+        <option value="Chưa thu">Chưa thanh toán</option>
+        <option value="Đã thu">Đã thanh toán</option>
+    </select>
+</form>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã HĐ</th>
+            <th>Ngày Lập</th>
+            <th>Tiền Nhà</th>
+            <th>Tiền Điện</th>
+            <th>Tiền Nước</th>
+            <th>Tổng Cộng</th>
+            <th>Trạng Thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any()) { <tr><td colspan="7" class="text-center">Không có hóa đơn nào.</td></tr> }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaPT</td>
+                <td>@item.NgayLap.ToString("dd/MM/yyyy")</td>
+                <td>@item.TienNha?.ToString("N0")</td>
+                <td>@item.TienDien?.ToString("N0")</td>
+                <td>@item.TienNuoc?.ToString("N0")</td>
+                <td class="text-danger fw-bold">@item.TongTien?.ToString("N0")</td>
+                <td>
+                    @if (item.TrangThai == "Đã thu") { <span class="badge bg-success">Đã thu</span> }
+                    else { <span class="badge bg-danger">Chưa thu</span> }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

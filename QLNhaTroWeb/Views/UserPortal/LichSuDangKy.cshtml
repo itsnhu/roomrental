@@ -1,0 +1,49 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.YeuCauThuePhong>
+@{ ViewData["Title"] = "Lịch sử đăng ký"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Lịch Sử Yêu Cầu Thuê Phòng</h2>
+    <a href="/UserPortal/DangKyThue" class="btn btn-success">+ Gửi Yêu Cầu Mới</a>
+</div>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success alert-dismissible fade show">@TempData["Success"] <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+@if (TempData["Error"] != null) { <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"] <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div> }
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover table-bordered mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã YC</th>
+                    <th>Phòng Yêu Cầu</th>
+                    <th>Ngày Đăng Ký</th>
+                    <th>Ngày Dự Kiến Vào</th>
+                    <th>Trạng Thái</th>
+                    <th>Phản Hồi Từ Admin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-3">Bạn chưa gửi yêu cầu thuê phòng nào.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaYeuCau</td>
+                        <td><span class="badge bg-info text-dark">@item.Phong?.TenPhong (@item.MaPhong)</span></td>
+                        <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@(item.NgayDuKienThue?.ToString("dd/MM/yyyy") ?? "-")</td>
+                        <td>
+                            @if (item.TrangThai == "Chờ duyệt") { <span class="badge bg-warning text-dark">Chờ duyệt</span> }
+                            else if (item.TrangThai == "Đã duyệt") { <span class="badge bg-success">Đã duyệt</span> }
+                            else if (item.TrangThai == "Từ chối") { <span class="badge bg-danger">Từ chối</span> }
+                            else { <span class="badge bg-secondary">@item.TrangThai</span> }
+                        </td>
+                        <td>@(string.IsNullOrEmpty(item.PhanHoiAdmin) ? "-" : item.PhanHoiAdmin)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

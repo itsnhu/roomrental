@@ -1,0 +1,24 @@
+﻿@model QLNhaTroWeb.Models.Phong
+@{ ViewData["Title"] = "Chi tiết phòng"; }
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h4>Thông tin chi tiết: @Model.TenPhong</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr><th style="width: 30%">Mã phòng</th><td>@Model.MaPhong</td></tr>
+            <tr><th>Khu vực</th><td>@Model.KhuVuc?.TenKhuVuc</td></tr>
+            <tr><th>Dãy</th><td>@Model.Day</td></tr>
+            <tr><th>Loại phòng</th><td>@Model.LoaiPhong?.TenLoaiPhong</td></tr>
+            <tr><th>Diện tích</th><td>@Model.LoaiPhong?.DienTichPhong m²</td></tr>
+            <tr><th>Giá thuê</th><td class="text-danger fw-bold">@Model.LoaiPhong?.DonGia?.ToString("N0") VNĐ/tháng</td></tr>
+            <tr><th>Ghi chú</th><td>@Model.GhiChu</td></tr>
+        </table>
+        
+        <div class="mt-4">
+            <a asp-action="DangKyThue" asp-route-maPhong="@Model.MaPhong" class="btn btn-success btn-lg">Đăng Ký Thuê Phòng Này</a>
+            <a asp-action="TimPhong" class="btn btn-secondary btn-lg">Quay lại</a>
+        </div>
+    </div>
+</div>

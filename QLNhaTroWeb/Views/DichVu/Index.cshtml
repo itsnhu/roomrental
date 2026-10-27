@@ -1,0 +1,71 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.DichVu>
+@{ ViewData["Title"] = "Quản lý Dịch Vụ"; }
+
+<div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h5 class="fw-bold mb-1 text-dark">Danh mục Dịch Vụ</h5>
+                <p class="text-muted small mb-0">Quản lý giá điện, nước, rác và các dịch vụ khác.</p>
+            </div>
+            <a asp-action="Create" class="btn btn-success px-4 shadow-sm" style="border-radius: 8px;">
+                <i class="bi bi-plus-lg me-1"></i> Thêm Dịch Vụ
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted text-uppercase" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                    <tr>
+                        <th class="py-3">Mã DV</th>
+                        <th class="py-3">Tên Dịch Vụ</th>
+                        <th class="py-3">Đơn Giá</th>
+                        <th class="py-3 text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="4" class="text-center py-4 text-muted">Chưa có dịch vụ nào.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold text-primary">@item.Id</td>
+                                <!-- ĐÃ XÓA ICON TIA SÉT Ở ĐÂY -->
+                                <td class="fw-medium">@item.TenDichVu</td>
+                                <td class="text-danger fw-bold">@item.Gia?.ToString("N0") VNĐ</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Sửa" style="border-radius: 6px;"><i class="bi bi-pencil-square"></i></a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Xóa dịch vụ này?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa" style="border-radius: 6px;"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

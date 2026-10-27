@@ -1,0 +1,28 @@
+﻿@{ ViewData["Title"] = "Đổi Mật Khẩu"; }
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Đổi Mật Khẩu</h4>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Error != null) { <div class="alert alert-danger">@ViewBag.Error</div> }
+                @if (ViewBag.Success != null) { <div class="alert alert-success">@ViewBag.Success</div> }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu cũ</label>
+                        <input type="password" name="oldPass" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu mới</label>
+                        <input type="password" name="newPass" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Xác Nhận Đổi</button>
+                    <a href="/UserPortal/Index" class="btn btn-secondary w-100 mt-2">Quay lại</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

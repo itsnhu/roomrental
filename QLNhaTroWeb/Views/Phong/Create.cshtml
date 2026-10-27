@@ -1,0 +1,92 @@
+﻿@model QLNhaTroWeb.Models.Phong
+@{ ViewData["Title"] = "Thêm Phòng Mới"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Thêm Phòng Mới</h5>
+                <p class="text-muted small mb-0">Hệ thống sẽ tự động tạo Mã Phòng cho bạn.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Create" id="phongForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+                    
+                    <!-- Hàng 1: Tên Phòng (Max 200, In Hoa) -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold text-muted small">Tên Phòng <span class="text-danger">*</span></label>
+                            <input asp-for="TenPhong" class="form-control text-uppercase" placeholder="VD: PHÒNG 101" required maxlength="200" style="text-transform: uppercase;" />
+                            <span asp-validation-for="TenPhong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 2: Dãy và Trạng Thái -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Dãy <span class="text-danger">*</span></label>
+                            <input asp-for="Day" class="form-control text-uppercase" placeholder="VD: DÃY A" required maxlength="200" style="text-transform: uppercase;" />
+                            <span asp-validation-for="Day" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Trạng Thái <span class="text-danger">*</span></label>
+                            <select asp-for="TrangThai" class="form-select" required>
+                                <option value="">-- Chọn trạng thái --</option>
+                                <option value="Còn trống">Còn trống</option>
+                                <option value="Đang thuê">Đang thuê</option>
+                            </select>
+                            <span asp-validation-for="TrangThai" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 3: Khu Vực và Loại Phòng (Bắt buộc chọn) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Khu Vực <span class="text-danger">*</span></label>
+                            <select asp-for="MaKhuVuc" class="form-select" asp-items="ViewBag.MaKhuVuc" required>
+                                <option value="">-- Chọn khu vực --</option>
+                            </select>
+                            <span asp-validation-for="MaKhuVuc" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Loại Phòng <span class="text-danger">*</span></label>
+                            <select asp-for="MaLoaiPhong" class="form-select" asp-items="ViewBag.MaLoaiPhong" required>
+                                <option value="">-- Chọn loại phòng --</option>
+                            </select>
+                            <span asp-validation-for="MaLoaiPhong" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 4: Ghi Chú -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted small">Ghi Chú</label>
+                        <input asp-for="GhiChu" class="form-control" placeholder="Thông tin thêm về phòng..." />
+                        <span asp-validation-for="GhiChu" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Nút bấm -->
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-success px-4" id="btnSubmit" style="border-radius: 8px;">
+                            <i class="bi bi-plus-circle me-1"></i> Thêm Mới
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#phongForm').submit(function () {
+            if ($(this).valid()) {
+                $('#btnSubmit').prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Đang lưu...');
+            }
+        });
+    </script>
+}

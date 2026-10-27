@@ -1,0 +1,98 @@
+﻿@model QLNhaTroWeb.Models.ThongTinThuePhong
+@{ ViewData["Title"] = "Lập Hợp Đồng Mới"; }
+
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold text-dark mb-1">Lập Hợp Đồng Thuê Phòng</h5>
+                <p class="text-muted small mb-0">Hệ thống sẽ tự động cấp Mã Hợp Đồng.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Create" id="hopDongForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 small"></div>
+                    
+                    <!-- Hàng 1: Khách Hàng (Bỏ ô Mã HĐ) -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold text-muted small">Chọn Khách Hàng <span class="text-danger">*</span></label>
+                            <select asp-for="MaKhachTro" class="form-select" asp-items="ViewBag.MaKhachTro" required>
+                                <option value="">-- Chọn khách chưa có phòng --</option>
+                            </select>
+                            <span asp-validation-for="MaKhachTro" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 2: Phòng và Ngày Thuê -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Chọn Phòng Trống <span class="text-danger">*</span></label>
+                            <select asp-for="MaPhong" class="form-select" asp-items="ViewBag.MaPhong" required>
+                                <option value="">-- Chọn phòng --</option>
+                            </select>
+                            <span asp-validation-for="MaPhong" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Ngày Bắt Đầu Thuê <span class="text-danger">*</span></label>
+                            <!-- Giới hạn Min là hôm nay, Max là 3 tháng sau -->
+                            <input asp-for="NgayThue" class="form-control" type="date" 
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                                   max="@DateTime.Today.AddMonths(3).ToString("yyyy-MM-dd")" 
+                                   value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                            <span asp-validation-for="NgayThue" class="text-danger small"></span>
+                            <div class="form-text small text-muted mt-1">Chỉ được chọn trong vòng 3 tháng tới.</div>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 3: Tiền cọc và Ghi chú -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-semibold text-muted small">Tiền Đặt Cọc <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <!-- Bắt buộc nhập từ 1.000.000 trở lên -->
+                                <input asp-for="TienDatCoc" class="form-control" type="number" min="1000000" step="100000" placeholder="VD: 1500000" required />
+                                <span class="input-group-text">VNĐ</span>
+                            </div>
+                            <span asp-validation-for="TienDatCoc" class="text-danger small"></span>
+                            <div class="form-text small text-muted mt-1">Tối thiểu 1.000.000 VNĐ.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-muted small">Ghi Chú Hợp Đồng</label>
+                            <input asp-for="GhiChu" class="form-control" placeholder="Điều khoản, thời hạn..." />
+                            <span asp-validation-for="GhiChu" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Cảnh báo nghiệp vụ -->
+                    <div class="alert alert-info border-0 shadow-sm small mb-4" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Lưu ý:</strong> Khi lưu hợp đồng, hệ thống sẽ tự động chuyển trạng thái phòng sang <strong>"Đang thuê"</strong> và gán phòng này cho khách hàng.
+                    </div>
+
+                    <!-- Nút bấm -->
+                    <div class="d-flex gap-2 justify-content-end border-top pt-3">
+                        <a asp-action="Index" class="btn btn-light px-4" style="border-radius: 8px;">
+                            <i class="bi bi-arrow-left"></i> Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4" id="btnSubmit" style="border-radius: 8px;">
+                            <i class="bi bi-file-earmark-check me-1"></i> Lưu Hợp Đồng
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Chống click đúp nút Lưu
+        $('#hopDongForm').submit(function () {
+            if ($(this).valid()) {
+                $('#btnSubmit').prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i> Đang lưu...');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<QLNhaTroWeb.Models.TraPhong>
+@{ ViewData["Title"] = "Lịch sử Trả phòng"; }
+
+<div class="card border-0 shadow-sm" style="border-radius: 12px;">
+    <div class="card-body p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h5 class="fw-bold mb-1 text-dark">Lịch sử Trả Phòng</h5>
+                <p class="text-muted small mb-0">Danh sách khách hàng đã hoàn tất thủ tục trả phòng.</p>
+            </div>
+            <a asp-action="Create" class="btn btn-primary px-4 shadow-sm" style="border-radius: 8px;">
+                <i class="bi bi-box-arrow-right me-1"></i> Lập Phiếu Trả Phòng
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-muted text-uppercase" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                    <tr>
+                        <th class="py-3">Mã Phiếu</th>
+                        <th class="py-3">Phòng</th>
+                        <th class="py-3">Tên Khách Hàng</th>
+                        <th class="py-3">Ngày Trả Phòng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i> Chưa có lịch sử trả phòng.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold text-primary">#@item.Id</td>
+                                <td class="fw-medium text-success"><i class="bi bi-door-closed me-1"></i>@item.Phong?.TenPhong</td>
+                                <td>@item.ThongTinKhach?.Ho @item.ThongTinKhach?.Ten</td>
+                                <td>@item.NgayTraPhong?.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

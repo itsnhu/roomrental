@@ -1,0 +1,264 @@
+﻿@model QLNhaTroWeb.Models.ThongTinDangKyPhong
+@{
+    Layout = null;
+    ViewData["Title"] = "Đăng ký thuê phòng";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký thuê phòng - QL Nhà Trọ</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cột trái: Khung chứa ảnh */
+        .image-section {
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Cao bằng màn hình */
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Phủ kín khung, không méo ảnh */
+            object-position: center;
+        }
+
+        /* Cột phải: Khung chứa form */
+        .form-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center; /* Căn giữa form theo chiều dọc */
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Tuỳ chỉnh ô nhập liệu cho gọn gàng */
+        .form-control-custom, .form-select-custom {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem; /* Giảm padding cho thấp lại */
+            font-size: 0.9rem;
+            height: auto;
+        }
+
+        .form-control-custom:focus, .form-select-custom:focus {
+            background-color: #fff;
+            border-color: #198754;
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .btn-custom {
+            background-color: #198754;
+            color: white;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .btn-custom:hover {
+            background-color: #146c43;
+            color: white;
+        }
+
+        /* Xử lý cho màn hình laptop thấp (dưới 768px chiều cao) */
+        @@media (max-height: 768px) {
+            .form-section { padding: 1rem; }
+            .mb-3 { margin-bottom: 0.5rem !important; }
+            .form-control-custom, .form-select-custom { padding: 0.4rem 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            
+            <!-- CỘT TRÁI: ẢNH CỐ ĐỊNH -->
+            <div class="col-lg-6 d-none d-lg-block image-section">
+                <img src="~/images/dangky-illustration.jpg" alt="Không gian nhà trọ" />
+            </div>
+
+            <!-- CỘT PHẢI: FORM ĐĂNG KÝ -->
+            <div class="col-lg-6 form-section bg-white">
+                <div class="form-wrapper">
+                    
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-success">ĐĂNG KÝ THUÊ PHÒNG</h3>
+                        <p class="text-muted small mb-0">Vui lòng điền thông tin để gửi yêu cầu.</p>
+                    </div>
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success py-2 small">@TempData["Success"]</div>
+                    }
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+                    {
+                        <div class="alert alert-danger py-2 small">
+                            <div asp-validation-summary="ModelOnly" class="mb-0"></div>
+                        </div>
+                    }
+
+                    <form asp-action="Index" method="post" id="dangKyForm" novalidate>
+                        @Html.AntiForgeryToken()
+                        
+                        <!-- Hàng 1 -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-2 mb-md-0">
+                                <label class="form-label">Họ <span class="text-danger">*</span></label>
+                                <input asp-for="Ho" class="form-control form-control-custom text-uppercase" placeholder="VD: NGUYỄN" />
+                                <span asp-validation-for="Ho" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tên <span class="text-danger">*</span></label>
+                                <input asp-for="Ten" class="form-control form-control-custom text-uppercase" placeholder="VD: VĂN AN" />
+                                <span asp-validation-for="Ten" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hàng 2 -->
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <label class="form-label">Giới tính <span class="text-danger">*</span></label>
+                                <select asp-for="GioiTinh" class="form-select form-select-custom">
+                                    <option value="">-- Chọn --</option>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                </select>
+                                <span asp-validation-for="GioiTinh" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <label class="form-label">Ngày sinh <span class="text-danger">*</span></label>
+                                <input asp-for="NgaySinh" class="form-control form-control-custom" type="date" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="NgaySinh" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">CMND/CCCD <span class="text-danger">*</span></label>
+                                <input asp-for="CMND" class="form-control form-control-custom" type="text" 
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="12" placeholder="9-12 số" />
+                                <span asp-validation-for="CMND" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hàng 3 -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-2 mb-md-0">
+                                <label class="form-label">Quê quán <span class="text-danger">*</span></label>
+                                <input asp-for="QueQuan" class="form-control form-control-custom" placeholder="VD: Hà Nội" />
+                                <span asp-validation-for="QueQuan" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nghề nghiệp <span class="text-danger">*</span></label>
+                                <input asp-for="NgheNghiep" class="form-control form-control-custom" placeholder="VD: Sinh viên" />
+                                <span asp-validation-for="NgheNghiep" class="text-danger" style="font-size: 0.75rem;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hàng 4 -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-2 mb-md-0">
+                                <label class="form-label">Khu vực mong muốn</label>
+                                <select asp-for="MaKhuVuc" class="form-select form-select-custom" asp-items="ViewBag.MaKhuVuc" id="cbKhuVuc">
+                                    <option value="">-- Tất cả --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Loại phòng mong muốn</label>
+                                <select asp-for="MaLoaiPhong" class="form-select form-select-custom" asp-items="ViewBag.MaLoaiPhong" id="cbLoaiPhong">
+                                    <option value="">-- Tất cả --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Hàng 5 -->
+                        <div class="mb-4 p-2 rounded bg-light border border-success border-opacity-25">
+                            <label class="form-label text-success fw-bold"><i class="bi bi-door-closed"></i> Chọn Phòng Cụ Thể</label>
+                            <select asp-for="MaPhong" class="form-select form-select-custom" id="cbPhong">
+                                <option value="">-- Không chọn, Admin sẽ tự xếp phòng sau --</option>
+                                @if(ViewBag.DanhSachPhong != null) {
+                                    foreach(var p in ViewBag.DanhSachPhong) {
+                                        <option value="@p.MaPhong" data-khuvuc="@p.MaKhuVuc" data-loaiphong="@p.MaLoaiPhong">@p.TenPhong</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="MaPhong" class="text-danger" style="font-size: 0.75rem;"></span>
+                        </div>
+
+                        <!-- Nút Submit -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-custom shadow-sm" id="btnSubmit">
+                                Gửi Đơn Đăng Ký
+                            </button>
+                            
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-link text-muted text-decoration-none mt-1" style="font-size: 0.9rem;">
+                                <i class="bi bi-arrow-left"></i> Quay lại đăng nhập
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            function filterRooms() {
+                var khuVuc = $('#cbKhuVuc').val();
+                var loaiPhong = $('#cbLoaiPhong').val();
+                var currentRoom = $('#cbPhong').val();
+                
+                $('#cbPhong').empty().append('<option value="">-- Không chọn, Admin sẽ tự xếp phòng sau --</option>');
+
+                var originalOptions = @Html.Raw(Json.Serialize(ViewBag.DanhSachPhong));
+                $.each(originalOptions, function(index, p) {
+                    if ((!khuVuc || p.maKhuVuc === khuVuc) && (!loaiPhong || p.maLoaiPhong === loaiPhong)) {
+                        var isSelected = (p.maPhong === currentRoom) ? 'selected' : '';
+                        $('#cbPhong').append(`<option value="${p.maPhong}" ${isSelected}>${p.tenPhong}</option>`);
+                    }
+                });
+            }
+
+            $('#cbKhuVuc, #cbLoaiPhong').change(function () {
+                filterRooms();
+            });
+
+            $('#dangKyForm').submit(function () {
+                if ($(this).valid()) {
+                    $('#btnSubmit').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang xử lý...');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

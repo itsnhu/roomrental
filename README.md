@@ -5,12 +5,12 @@
 ![SQL Server](https://img.shields.io/badge/SQL_Server-Database-red)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0-purple)
 
-## 📖 Giới thiệu
+##  Giới thiệu
 **QLNhaTroWeb** là một ứng dụng web toàn diện dành cho việc quản lý nhà trọ, phòng trọ. Dự án được phát triển dựa trên nền tảng **ASP.NET Core MVC (C#)** và cơ sở dữ liệu **SQL Server**. 
 
 Điểm đặc biệt của dự án này là được **chuyển đổi hoàn toàn từ một ứng dụng Desktop (WinForms) cũ** sang kiến trúc Web hiện đại, giúp người dùng có thể truy cập mọi lúc mọi nơi thông qua trình duyệt mà không cần cài đặt phần mềm.
 
-## ✨ Tính năng nổi bật
+##  Tính năng nổi bật
 
 ### 1. Dành cho Quản trị viên (Admin)
 - **Dashboard trực quan:** Thống kê tổng quan số phòng, khách thuê, doanh thu và hóa đơn chưa thu bằng biểu đồ/thẻ thông tin hiện đại.
@@ -19,7 +19,7 @@
 - **Quản lý Hóa đơn thông minh:** 
   - Tự động tính tiền điện, nước dựa trên chỉ số và đơn giá.
   - Tự động tính tổng tiền và sinh mã hóa đơn.
-  - Hỗ trợ in hóa đơn chuẩn A4/A5.
+  - Hỗ trợ in hóa đơn chuẩn.
 - **Duyệt yêu cầu:** Phê duyệt đơn đăng ký thuê phòng của khách hàng.
 - **Bảo mật nâng cao:** Đăng nhập bằng Mật khẩu hoặc **Quét mã QR Code** (tích hợp Camera).
 
@@ -39,5 +39,5 @@
 - **Triển khai (Deploy):** Somee Hosting
 
 ## 🌐 Trải nghiệm
-Dự án đã được triển khai (deploy) thành công trên môi trường Internet
-👉 **[BẤM VÀO ĐÂY ĐỂ TRẢI NGHIỆM HỆ THỐNG](https://rentalroom.somee.com)** 
+Dự án đã được triển khai
+👉 **[BẤM VÀO ĐÂY ĐỂ TRẢI NGHIỆM HỆ THỐNG](http://rentalroom.somee.com/)** 

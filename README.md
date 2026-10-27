@@ -38,8 +38,6 @@
 - **Xác thực:** Session, Cookie, Phân quyền Role-based (Admin/User)
 - **Triển khai (Deploy):** Somee Hosting
 
-## 🚀 Hướng dẫn cài đặt (Local)
-
-1. **Clone dự án:**
-   ```bash
-   git clone https://github.com/TenTaiKhoanCuaBan/QLNhaTroWeb.git
+## 🌐 Trải nghiệm
+Dự án đã được triển khai (deploy) thành công trên môi trường Internet
+👉 **[BẤM VÀO ĐÂY ĐỂ TRẢI NGHIỆM HỆ THỐNG](https://rentalroom.somee.com)** 
